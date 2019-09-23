@@ -3,12 +3,12 @@
   <div class="card-body">
     <div class="row">
       <div class="col-md-2">Filtered by:</div>
-      <div class="col-md-4" ><input [(ngModel)]="listFilter" type="text" /></div>
+      <div class="col-md-4"><input [(ngModel)]="listFilter" type="text" /></div>
     </div>
 
     <div class="row">
       <div class="col-md-6">
-        <h4>Filtered by: {{listFilter}}</h4>
+        <h4>Filtered by: {{ listFilter}}</h4>
       </div>
     </div>
     <div class="table-responsive">
@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let product of products">
+          <tr *ngFor="let product of filteredProducts">
             <td>
               <img
                 *ngIf="showImage"
@@ -39,10 +39,12 @@
                 alt="{{ product.productName }}"
               />
             </td>
-            <td>{{ product.productName | uppercase}}</td>
-            <td>{{ product.productCode | lowercase}}</td>
+            <td>{{ product.productName }}</td>
+            <td>
+              {{ product.productCode | lowercase | convertToSpaces: "-" }}
+            </td>
             <td>{{ product.releaseDate }}</td>
-            <td>{{ product.price | currency: 'NGN' : 'symbol' : '2.2-2'}}</td>
+            <td>{{ product.price | currency: "NGN":"symbol":"2.2-2" }}</td>
             <td>{{ product.starRating }}</td>
           </tr>
         </tbody>

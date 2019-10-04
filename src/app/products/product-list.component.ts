@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { Iproduct } from "./product";
+import { IProduct } from "./product";
+import { ProductService } from './product.service';
 
 @Component({
   selector: "pm-products",
@@ -7,11 +8,19 @@ import { Iproduct } from "./product";
   styleUrls: ["./product-list.component.css"]
 })
 export class ProductListComponent implements OnInit {
-  pageTitle: string = "Product List Items";
+  pageTitle: string = "Product List";
   imageWidth: number = 50;
   imageMargin: number = 2;
   showImage: boolean = false;
   _listFilter: string;
+
+  filteredProducts: IProduct[];
+  products: IProduct[];
+  errorMessage: string;
+
+
+  constructor(private productService: ProductService) {
+  }
 
   get listFilter(): string {
     return this._listFilter;
@@ -23,37 +32,11 @@ export class ProductListComponent implements OnInit {
       ? this.performFilter(this.listFilter)
       : this.products;
   }
-  filteredProducts: Iproduct[];
-  products: Iproduct[] = [
-    {
-      productId: 1,
-      productName: "Leaf Rake",
-      productCode: "GDN-0011",
-      releaseDate: "March 19, 2019",
-      description: "Leaf rake with 48-inch wooden handle.",
-      price: 19.95,
-      starRating: 3.2,
-      imageUrl: "assets/images/leaf_rake.png"
-    },
-    {
-      productId: 2,
-      productName: "Garden Cart",
-      productCode: "GDN-0023",
-      releaseDate: "March 18, 2019",
-      description: "15 gallon capacity rolling garden cart",
-      price: 32.99,
-      starRating: 4.2,
-      imageUrl: "assets/images/garden_cart.png"
-    }
-  ];
-  constructor() {
-    this.filteredProducts = this.products;
-    this.listFilter = 'cart';
-  }
+
   performFilter(filterBy: string) {
     filterBy = filterBy.toLocaleLowerCase();
     return this.products.filter(
-      (product: Iproduct) =>
+      (product: IProduct) =>
         product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
@@ -61,6 +44,18 @@ export class ProductListComponent implements OnInit {
     this.showImage = !this.showImage;
   }
   ngOnInit(): void {
-    console.log("In ngOnInit!");
+    this.productService.getProducts().subscribe({
+      //returns lazy :) observable
+      // need to subscribe to observable to get results out
+      next: products => {
+        this.products = products;
+        this.filteredProducts = this.products;
+      },
+      error: err => this.errorMessage = err
+    });
+
+  }
+  onRatingClicked(message:string): void {
+    this.pageTitle = 'Product List : ' + message;
   }
 }

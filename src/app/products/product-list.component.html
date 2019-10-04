@@ -45,7 +45,8 @@
             </td>
             <td>{{ product.releaseDate }}</td>
             <td>{{ product.price | currency: "NGN":"symbol":"2.2-2" }}</td>
-            <td>{{ product.starRating }}</td>
+            <!-- Nesting the star component within the product -->
+            <td><pm-star [rating] = 'product.starRating' (ratingClicked) = "onRatingClicked($event)"></pm-star></td>
           </tr>
         </tbody>
       </table>

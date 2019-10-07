@@ -10,22 +10,27 @@ import { ProductService } from './product.service';
 export class ProductDetailComponent implements OnInit {
   pageTitle: string = 'Product Details';
   imageWidth: number = 200;
-  // imagePadding: number = 20;
+  errorMessage: string = '';
   product: IProduct;
-  constructor(private route: ActivatedRoute, private router: Router, private products: ProductService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) {}
 
   ngOnInit() {
-    let id = +this.route.snapshot.paramMap.get('id');// '+' converts string to num
-    this.products.getProducts().subscribe({
-      next: (products) => {
-        this.product = this.filterProduct(products, id);
+    const param = this.route.snapshot.paramMap.get('id');
+    if(param) {
+      const id = +param;// '+' converts string to num
+      this.getProduct(id);
+    }
+  }
+  getProduct(id: number): void {
+    this.productService.getProduct(id).subscribe({
+      next: (product) => {
+        this.product = product;
+      },
+      error: (err) => {
+        this.errorMessage = err;
       }
     })
   }
-  filterProduct(products: IProduct[], id: number) {
-    return products.find(product => product.productId === id)
-  }
-
   onBack(): void {
     this.router.navigate(['/products'])
   }

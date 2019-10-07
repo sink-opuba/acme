@@ -26,7 +26,6 @@ export class ProductService {
     //This error handling is just for demo on the app
     //for real world app, instead of logging to console
     //we may send server to some remote logging infrastructure
-
     let errorMessage = '';
     if(err.error instanceof ErrorEvent) {
       //A client side or network error occurred
@@ -35,7 +34,6 @@ export class ProductService {
       //The backend returned an unsuccessful code
       //Response body may contain clues as to what went wrong
       errorMessage = `Server side response code: ${err.status}, error message is: ${err.message}`
-
     }
     console.error(errorMessage)
     return throwError('error');
